@@ -33,7 +33,7 @@ public class AsteroidPlugin implements IGamePluginService {
         
         Entity enemyAsteroid = new Asteroid();
         enemyAsteroid.add(new MovingPart(deacceleration, acceleration, maxSpeed, rotationSpeed));
-        enemyAsteroid.add(new PositionPart(0, 0, radians));
+        enemyAsteroid.add(new PositionPart((float) Math.random(), (float) Math.random(), (float) Math.random()));
         
         return enemyAsteroid;
     }

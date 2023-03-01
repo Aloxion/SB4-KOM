@@ -16,7 +16,6 @@ import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
  */
 public class AsteroidControlSystem implements IEntityProcessingService {
 
-    private int rnd;
 
     @Override
     public void process(GameData gameData, World world) {
@@ -27,22 +26,8 @@ public class AsteroidControlSystem implements IEntityProcessingService {
 
 
             //Random Movement:
-            Thread thread = new Thread(){
-                public void run(){
-                    rnd = (int) Math.round(Math.random());
-                }
-            };
-            thread.start();
             movingPart.setUp(true);
-            if (rnd == 0){
-                movingPart.setLeft(true);
-                movingPart.setRight(false);
-            }
 
-            if (rnd == 1){
-                movingPart.setRight(true);
-                movingPart.setLeft(false);
-            }
 
 
             movingPart.process(gameData, asteroid);

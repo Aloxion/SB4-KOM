@@ -12,6 +12,7 @@ public class BulletPlugin implements IGamePluginService {
 
     private Entity bullet;
 
+
     public BulletPlugin() {
     }
 
