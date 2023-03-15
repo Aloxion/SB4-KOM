@@ -1,7 +1,7 @@
 package dk.sdu.mmmi.cbse.common.services;
 
-import dk.sdu.mmmi.cbse.common.services.data.GameData;
-import dk.sdu.mmmi.cbse.common.services.data.World;
+import dk.sdu.mmmi.cbse.common.data.GameData;
+import dk.sdu.mmmi.cbse.common.data.World;
 
 /**
  * Pre- Does nothing, not implemented

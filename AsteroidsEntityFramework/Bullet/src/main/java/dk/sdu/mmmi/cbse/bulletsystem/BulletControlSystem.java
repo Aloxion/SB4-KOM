@@ -1,21 +1,26 @@
 package dk.sdu.mmmi.cbse.bulletsystem;
 
-import dk.sdu.mmmi.cbse.common.services.data.Entity;
-import dk.sdu.mmmi.cbse.common.services.data.GameData;
-import dk.sdu.mmmi.cbse.common.services.data.World;
-import dk.sdu.mmmi.cbse.common.services.data.entityparts.MovingPart;
-import dk.sdu.mmmi.cbse.common.services.data.entityparts.PositionPart;
+import dk.sdu.mmmi.cbse.common.bullet.Bullet;
+import dk.sdu.mmmi.cbse.common.bullet.BulletSPI;
+import dk.sdu.mmmi.cbse.common.data.Entity;
+import dk.sdu.mmmi.cbse.common.data.GameData;
+import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
+import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
+import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
+import dk.sdu.mmmi.cbse.common.data.entityparts.TimerPart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
 import java.util.ArrayList;
 
-import static dk.sdu.mmmi.cbse.common.services.data.GameKeys.SPACE;
-
+import static dk.sdu.mmmi.cbse.common.data.GameKeys.SPACE;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 /**
  *
  * @author jcs
  */
-public class BulletControlSystem implements IEntityProcessingService {
+public class BulletControlSystem implements IEntityProcessingService, BulletSPI {
 
     private BulletPlugin bulletplugin = new BulletPlugin();
     private ArrayList<Bullet> bulletList = new ArrayList<>();
@@ -24,7 +29,7 @@ public class BulletControlSystem implements IEntityProcessingService {
     @Override
     public void process(GameData gameData, World world) {
 
-        // Cooldown for shooting
+        /*// Cooldown for shooting
         long timeNow = System.currentTimeMillis();
         long time = timeNow - timeOfLastProjectile;
         if (gameData.getKeys().isDown(SPACE)){
@@ -32,14 +37,15 @@ public class BulletControlSystem implements IEntityProcessingService {
                 bulletplugin.start(gameData,world);
                 timeOfLastProjectile = timeNow;
             }
-        }
+        }*/
 
         for (Entity bullet : world.getEntities(Bullet.class)) {
             PositionPart positionPart = bullet.getPart(PositionPart.class);
             MovingPart movingPart = bullet.getPart(MovingPart.class);
+            TimerPart timerPart = bullet.getPart(TimerPart.class);
 
             // Adding a copy of the bullet to the list, so we can track it.
-            bulletList.add(new Bullet(bullet.getID()));
+            //bulletList.add(new Bullet(bullet.getID()));
 
             movingPart.setUp(true);
 
@@ -87,4 +93,8 @@ public class BulletControlSystem implements IEntityProcessingService {
         entity.setShapeY(shapey);
     }
 
+    @Override
+    public Entity createBullet(Entity e, GameData gameData) {
+        return null;
+    }
 }
