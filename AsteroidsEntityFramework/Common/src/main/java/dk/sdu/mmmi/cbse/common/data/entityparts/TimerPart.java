@@ -46,4 +46,8 @@ public class TimerPart
         }
     }
 
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes

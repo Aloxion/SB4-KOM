@@ -14,6 +14,7 @@
             <artifactId>Common</artifactId>
             <version>${project.version}</version>
         </dependency>
+<<<<<<< Updated upstream
         <dependency>
             <groupId>dk.sdu.mmmi.cbse</groupId>
             <artifactId>Player</artifactId>
@@ -26,5 +27,7 @@
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+=======
+>>>>>>> Stashed changes
     </dependencies>
 </project>

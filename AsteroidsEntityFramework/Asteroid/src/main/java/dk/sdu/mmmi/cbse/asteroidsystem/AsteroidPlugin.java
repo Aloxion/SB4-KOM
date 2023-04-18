@@ -1,10 +1,18 @@
 package dk.sdu.mmmi.cbse.asteroidsystem;
 
+<<<<<<< Updated upstream
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
+=======
+import dk.sdu.mmmi.cbse.common.services.data.Entity;
+import dk.sdu.mmmi.cbse.common.services.data.GameData;
+import dk.sdu.mmmi.cbse.common.services.data.World;
+import dk.sdu.mmmi.cbse.common.services.data.entityparts.MovingPart;
+import dk.sdu.mmmi.cbse.common.services.data.entityparts.PositionPart;
+>>>>>>> Stashed changes
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 
 public class AsteroidPlugin implements IGamePluginService {

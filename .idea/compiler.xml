@@ -42,6 +42,10 @@
         <module name="Asteroid (2)" />
         <module name="HelloWorld" />
         <module name="DictionaryDemo" />
+<<<<<<< Updated upstream
+=======
+        <module name="Common" />
+>>>>>>> Stashed changes
         <module name="AsteroidsNetbeansModules-app" />
         <module name="GeneralDictionary" />
         <module name="Core (1) (dk.sdu.mmmi.cbse)" />

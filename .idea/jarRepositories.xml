@@ -17,11 +17,14 @@
       <option name="url" value="https://oss.sonatype.org/content/repositories/snapshots/" />
     </remote-repository>
     <remote-repository>
+<<<<<<< Updated upstream
       <option name="id" value="central" />
       <option name="name" value="central" />
       <option name="url" value="https://maven.pkg.github.com/sweat-tek/ShadedLibGDX" />
     </remote-repository>
     <remote-repository>
+=======
+>>>>>>> Stashed changes
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />

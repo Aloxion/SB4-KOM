@@ -8,6 +8,11 @@
     </parent>
     <artifactId>Asteroid</artifactId>
     <packaging>jar</packaging>
+<<<<<<< Updated upstream
+=======
+    <name>Asteroid</name>
+
+>>>>>>> Stashed changes
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

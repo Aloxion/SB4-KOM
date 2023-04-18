@@ -14,11 +14,14 @@
         <option value="$PROJECT_DIR$/AsteroidsNetbeansModules/pom.xml" />
       </list>
     </option>
+<<<<<<< Updated upstream
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/AsteroidsEntityFramework/Common/pom.xml" />
       </set>
     </option>
+=======
+>>>>>>> Stashed changes
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_16" default="true" project-jdk-name="16" project-jdk-type="JavaSDK" />
 </project>

@@ -12,8 +12,8 @@ import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
-import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
+<<<<<<< Updated upstream
 import dk.sdu.mmmi.cbse.asteroidsystem.Asteroid;
 import dk.sdu.mmmi.cbse.common.util.SPILocator;
 import dk.sdu.mmmi.cbse.managers.GameInputProcessor;
@@ -23,6 +23,13 @@ import dk.sdu.mmmi.cbse.playersystem.PlayerPlugin;
 
 
 import java.util.ArrayList;
+=======
+import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
+import dk.sdu.mmmi.cbse.common.util.SPILocator;
+import dk.sdu.mmmi.cbse.managers.GameInputProcessor;
+import java.util.ArrayList;
+import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
+>>>>>>> Stashed changes
 import java.util.Collection;
 import java.util.List;
 
@@ -34,7 +41,7 @@ public class Game
 
     private final GameData gameData = new GameData();
     private List<IEntityProcessingService> entityProcessors = new ArrayList<>();
-    private List<IGamePluginService> entityPlugins = new ArrayList<>();
+    private List<IPostEntityProcessingService> postEntityProcessors = new ArrayList<>();
     private World world = new World();
 
     @Override
@@ -53,6 +60,7 @@ public class Game
                 new GameInputProcessor(gameData)
         );
 
+<<<<<<< Updated upstream
         IGamePluginService playerPlugin = new PlayerPlugin();
         IEntityProcessingService playerProcess = new PlayerControlSystem();
         entityPlugins.add(playerPlugin);
@@ -65,8 +73,10 @@ public class Game
 
         entityProcessors.add(new BulletControlSystem());
 
+=======
+>>>>>>> Stashed changes
         // Lookup all Game Plugins using ServiceLoader
-        for (IGamePluginService iGamePlugin : entityPlugins) {
+        for (IGamePluginService iGamePlugin : getPluginServices()) {
             iGamePlugin.start(gameData, world);
         }
     }
@@ -89,8 +99,11 @@ public class Game
 
     private void update() {
         // Update
-        for (IEntityProcessingService entityProcessorService : entityProcessors) {
+        for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
             entityProcessorService.process(gameData, world);
+        }
+        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
+            postEntityProcessorService.process(gameData, world);
         }
     }
 
@@ -115,8 +128,14 @@ public class Game
                 sr.begin(ShapeRenderer.ShapeType.Line);
                 sr.setColor(255, 0, 0, 1);
 
+<<<<<<< Updated upstream
                 float[] shapex = entity.getShapeX();
                 float[] shapey = entity.getShapeY();
+=======
+            for (int i = 0, j = shapex.length - 1;
+                 i < shapex.length;
+                 j = i++) {
+>>>>>>> Stashed changes
 
                 sr.circle(shapex[2],shapey[2], 5);
 
@@ -160,7 +179,10 @@ public class Game
     public void dispose() {
     }
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     private Collection<? extends IGamePluginService> getPluginServices() {
         return SPILocator.locateAll(IGamePluginService.class);
     }
@@ -172,7 +194,10 @@ public class Game
     private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
         return SPILocator.locateAll(IPostEntityProcessingService.class);
     }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 }
 
 
