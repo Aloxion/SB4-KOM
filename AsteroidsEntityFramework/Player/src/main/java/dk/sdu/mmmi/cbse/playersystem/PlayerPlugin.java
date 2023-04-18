@@ -16,10 +16,7 @@ public class PlayerPlugin implements IGamePluginService {
 
     @Override
     public void start(GameData gameData, World world) {
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
         // Add entities to the world
         player = createPlayerShip(gameData);
         world.addEntity(player);
@@ -39,7 +36,7 @@ public class PlayerPlugin implements IGamePluginService {
         playerShip.setRadius(8);
         playerShip.add(new MovingPart(deacceleration, acceleration, maxSpeed, rotationSpeed));
         playerShip.add(new PositionPart(x, y, radians));
-        playerShip.add(new LifePart(1,10000));
+        playerShip.add(new LifePart(1,5000));
 
         return playerShip;
     }

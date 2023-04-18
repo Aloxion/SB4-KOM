@@ -5,33 +5,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import dk.sdu.mmmi.cbse.asteroidsystem.AsteroidControlSystem;
-import dk.sdu.mmmi.cbse.asteroidsystem.AsteroidPlugin;
-import dk.sdu.mmmi.cbse.bulletsystem.BulletControlSystem;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
+import dk.sdu.mmmi.cbse.managers.GameInputProcessor;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
-import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
-<<<<<<< Updated upstream
-import dk.sdu.mmmi.cbse.asteroidsystem.Asteroid;
-import dk.sdu.mmmi.cbse.common.util.SPILocator;
-import dk.sdu.mmmi.cbse.managers.GameInputProcessor;
-import dk.sdu.mmmi.cbse.playersystem.Player;
-import dk.sdu.mmmi.cbse.playersystem.PlayerControlSystem;
-import dk.sdu.mmmi.cbse.playersystem.PlayerPlugin;
-
-
-import java.util.ArrayList;
-=======
-import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
-import dk.sdu.mmmi.cbse.common.util.SPILocator;
-import dk.sdu.mmmi.cbse.managers.GameInputProcessor;
-import java.util.ArrayList;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
->>>>>>> Stashed changes
+import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.ServiceLoader;
+
+
+import static java.util.stream.Collectors.toList;
 
 public class Game
         implements ApplicationListener {
@@ -60,21 +48,6 @@ public class Game
                 new GameInputProcessor(gameData)
         );
 
-<<<<<<< Updated upstream
-        IGamePluginService playerPlugin = new PlayerPlugin();
-        IEntityProcessingService playerProcess = new PlayerControlSystem();
-        entityPlugins.add(playerPlugin);
-        entityProcessors.add(playerProcess);
-
-        for (int i = 0; i < 5; i++) {
-            entityPlugins.add(new AsteroidPlugin());
-            entityProcessors.add(new AsteroidControlSystem());
-        }
-
-        entityProcessors.add(new BulletControlSystem());
-
-=======
->>>>>>> Stashed changes
         // Lookup all Game Plugins using ServiceLoader
         for (IGamePluginService iGamePlugin : getPluginServices()) {
             iGamePlugin.start(gameData, world);
@@ -109,57 +82,22 @@ public class Game
 
     private void draw() {
         for (Entity entity : world.getEntities()) {
-            if (entity.getClass() == Player.class) {
-                sr.begin(ShapeRenderer.ShapeType.Line);
-                sr.setColor(1, 1, 1, 1);
 
-                float[] shapex = entity.getShapeX();
-                float[] shapey = entity.getShapeY();
+            sr.setColor(1, 1, 1, 1);
 
-                for (int i = 0, j = shapex.length - 1;
-                     i < shapex.length;
-                     j = i++) {
+            sr.begin(ShapeRenderer.ShapeType.Line);
 
-                    sr.line(shapex[i], shapey[i], shapex[j], shapey[j]);
-                }
-                sr.end();
-            }
-            if (entity.getClass() == Asteroid.class) {
-                sr.begin(ShapeRenderer.ShapeType.Line);
-                sr.setColor(255, 0, 0, 1);
+            float[] shapex = entity.getShapeX();
+            float[] shapey = entity.getShapeY();
 
-<<<<<<< Updated upstream
-                float[] shapex = entity.getShapeX();
-                float[] shapey = entity.getShapeY();
-=======
             for (int i = 0, j = shapex.length - 1;
                  i < shapex.length;
                  j = i++) {
->>>>>>> Stashed changes
 
-                sr.circle(shapex[2],shapey[2], 5);
-
-
-                sr.end();
-            }
-            if (entity.getClass() == Bullet.class) {
-                sr.begin(ShapeRenderer.ShapeType.Line);
-                sr.setColor(255, 0, 255, 1);
-
-                float[] shapex = entity.getShapeX();
-                float[] shapey = entity.getShapeY();
-
-                for (int i = 0, j = shapex.length - 1;
-                     i < shapex.length;
-                     j = i++) {
-
-                    sr.line(shapex[i], shapey[i], shapex[j], shapey[j]);
-                }
-
-                sr.end();
+                sr.line(shapex[i], shapey[i], shapex[j], shapey[j]);
             }
 
-
+            sr.end();
         }
     }
 
@@ -179,25 +117,16 @@ public class Game
     public void dispose() {
     }
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     private Collection<? extends IGamePluginService> getPluginServices() {
-        return SPILocator.locateAll(IGamePluginService.class);
+        return ServiceLoader.load(IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 
     private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
-        return SPILocator.locateAll(IEntityProcessingService.class);
+        return ServiceLoader.load(IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 
     private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
-        return SPILocator.locateAll(IPostEntityProcessingService.class);
+        return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 }
-
-
