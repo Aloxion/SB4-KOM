@@ -6,12 +6,14 @@ import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
+import dk.sdu.mmmi.cbse.common.data.entityparts.ShootingPart;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 public class PlayerPlugin implements IGamePluginService {
 
     private Entity player;
 
     public PlayerPlugin() {
+
     }
 
     @Override
@@ -22,6 +24,15 @@ public class PlayerPlugin implements IGamePluginService {
         world.addEntity(player);
     }
 
+    /**
+     * Create player ship entity with default data and parts
+     * <br />
+     * Pre-condition: New player entity has to be created for the game <br />
+     * Post-condition: Player entity, that has default parameters and parts
+     *
+     * @param gameData Data for the game
+     * @return Player entity with default parameters and parts
+     */
     private Entity createPlayerShip(GameData gameData) {
 
         float deacceleration = 10;
@@ -33,10 +44,13 @@ public class PlayerPlugin implements IGamePluginService {
         float radians = 3.1415f / 2;
 
         Entity playerShip = new Player();
+
         playerShip.setRadius(8);
-        playerShip.add(new MovingPart(deacceleration, acceleration, maxSpeed, rotationSpeed));
+
+        playerShip.add(new MovingPart(deacceleration, acceleration, maxSpeed, rotationSpeed, 0));
         playerShip.add(new PositionPart(x, y, radians));
-        playerShip.add(new LifePart(1,5000));
+        playerShip.add(new LifePart(1, 0));
+        playerShip.add(new ShootingPart(0.2f));
 
         return playerShip;
     }
@@ -46,5 +60,4 @@ public class PlayerPlugin implements IGamePluginService {
         // Remove entities
         world.removeEntity(player);
     }
-
 }
