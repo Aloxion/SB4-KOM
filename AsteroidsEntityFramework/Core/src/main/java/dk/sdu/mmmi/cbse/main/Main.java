@@ -1,22 +1,23 @@
 package dk.sdu.mmmi.cbse.main;
-
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Main {
 	
 	public static void main(String[] args) {
 
-		Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
-		cfg.setTitle("Asteroids");
-		int width = 1200;
-		int height = 800;
-		cfg.setWindowSizeLimits(width, height, width, height);
-		cfg.setWindowedMode(width, height);
-		cfg.setResizable(false);
+		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(ModuleConfig.class);
 
-		new Lwjgl3Application(new Game(), cfg);
+		for (String beanName : ctx.getBeanDefinitionNames()) {
+			System.out.println(beanName);
+		}
+
+		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+		config.setTitle("Asteroids");
+		config.setWindowSizeLimits(1000,600,1000,600);
+
+		new Lwjgl3Application(ctx.getBean(Game.class), config);
 		
 	}
 	

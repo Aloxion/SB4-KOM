@@ -1,5 +1,6 @@
 package dk.sdu.mmmi.cbse.main;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -20,17 +21,22 @@ import java.util.ServiceLoader;
 
 
 import static java.util.stream.Collectors.toList;
-
 public class Game
         implements ApplicationListener {
 
     private static OrthographicCamera cam;
     private ShapeRenderer sr;
-
     private final GameData gameData = new GameData();
-    private List<IEntityProcessingService> entityProcessors = new ArrayList<>();
-    private List<IPostEntityProcessingService> postEntityProcessors = new ArrayList<>();
+    private final List<IGamePluginService> gamePluginServices;
+    private final List<IEntityProcessingService> entityProcessors;
+    private final List<IPostEntityProcessingService> postEntityProcessors;
     private World world = new World();
+
+    public Game(List<IGamePluginService> gamePluginServices, List<IEntityProcessingService> entityProcessors, List<IPostEntityProcessingService> postEntityProcessors) {
+        this.gamePluginServices = gamePluginServices;
+        this.entityProcessors = entityProcessors;
+        this.postEntityProcessors = postEntityProcessors;
+    }
 
     @Override
     public void create() {
@@ -49,7 +55,7 @@ public class Game
         );
 
         // Lookup all Game Plugins using ServiceLoader
-        for (IGamePluginService iGamePlugin : getPluginServices()) {
+        for (IGamePluginService iGamePlugin : gamePluginServices) {
             iGamePlugin.start(gameData, world);
         }
     }
@@ -72,10 +78,10 @@ public class Game
 
     private void update() {
         // Update
-        for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
+        for (IEntityProcessingService entityProcessorService : entityProcessors) {
             entityProcessorService.process(gameData, world);
         }
-        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
+        for (IPostEntityProcessingService postEntityProcessorService : postEntityProcessors) {
             postEntityProcessorService.process(gameData, world);
         }
     }
@@ -116,17 +122,4 @@ public class Game
     @Override
     public void dispose() {
     }
-
-    private Collection<? extends IGamePluginService> getPluginServices() {
-        return ServiceLoader.load(IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
-    }
-
-    private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
-        return ServiceLoader.load(IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
-    }
-
-    private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
-        return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
-    }
-
 }

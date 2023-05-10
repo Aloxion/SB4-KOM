@@ -26,7 +26,7 @@ public class CollisionDetector implements IPostEntityProcessingService {
         }
     }
 
-    private boolean collides(Entity hitterEntity, Entity collidedEntity) {
+    boolean collides(Entity hitterEntity, Entity collidedEntity) {
         // Get data for collision detection
         PositionPart hitterPositionPart = hitterEntity.getPart(PositionPart.class);
         PositionPart collidedPositionPart = collidedEntity.getPart(PositionPart.class);
