@@ -17,7 +17,6 @@ public class CollisionDetector implements IPostEntityProcessingService {
                 }
 
                 LifePart hitterEntityLifePart = hitterEntity.getPart(LifePart.class);
-                LifePart collidedEntityLifePart = hitterEntity.getPart(LifePart.class);
 
                 if (hitterEntityLifePart.getLife() > 0 && this.collides(hitterEntity, collidedEntity)) {
                     hitterEntityLifePart.setIsHit(true);
@@ -26,18 +25,21 @@ public class CollisionDetector implements IPostEntityProcessingService {
         }
     }
 
-    boolean collides(Entity hitterEntity, Entity collidedEntity) {
-        // Get data for collision detection
+    public boolean collides(Entity hitterEntity, Entity collidedEntity) {
+        // Get position for both entities
         PositionPart hitterPositionPart = hitterEntity.getPart(PositionPart.class);
         PositionPart collidedPositionPart = collidedEntity.getPart(PositionPart.class);
 
         // Calculate distance between
-        float dx = (float) (hitterPositionPart.getX() - collidedPositionPart.getX());
-        float dy = (float) (hitterPositionPart.getY() - collidedPositionPart.getY());
+        float dx = (hitterPositionPart.getX() - collidedPositionPart.getX());
+        float dy = (hitterPositionPart.getY() - collidedPositionPart.getY());
         float distanceBetween = (float) Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 
-        // Check if distance is less than the two radiuses, meaning that they are hitting each other
         float collisionDistance = hitterEntity.getRadius() + collidedEntity.getRadius();
-        return distanceBetween < collisionDistance;
+
+        if (distanceBetween < collisionDistance){
+            return true;
+        }
+        return false;
     }
 }

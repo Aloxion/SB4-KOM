@@ -1,6 +1,5 @@
 package dk.sdu.mmmi.cbse.main;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,13 +13,8 @@ import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.ServiceLoader;
 
-
-import static java.util.stream.Collectors.toList;
 public class Game
         implements ApplicationListener {
 

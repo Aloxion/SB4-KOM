@@ -16,6 +16,8 @@ public class Main {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setTitle("Asteroids");
 		config.setWindowSizeLimits(1000,600,1000,600);
+		config.setWindowedMode(1000, 600);
+		config.setResizable(false);
 
 		new Lwjgl3Application(ctx.getBean(Game.class), config);
 		

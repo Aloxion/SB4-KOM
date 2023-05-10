@@ -3,18 +3,17 @@ package dk.sdu.mmmi.cbse.common.data.entityparts;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 
-public class ShootingPart implements  EntityPart {
+public class WeaponPart implements  EntityPart {
     private float cooldownTime;
     private float cooldown;
     private boolean shooting;
 
-    private String bulletClass;
 
-    public ShootingPart(float cooldownTime) {
+    public WeaponPart(float cooldownTime) {
         this.cooldownTime = cooldownTime;
     }
 
-    public void setShooting(boolean shooting) {
+    public void timePassed(boolean shooting) {
         if (!shooting) {
             this.shooting = false;
             return;
@@ -29,7 +28,7 @@ public class ShootingPart implements  EntityPart {
         this.cooldown = this.cooldownTime;
     }
 
-    public boolean getShooting() {
+    public boolean getWeapon() {
         return this.shooting;
     }
 
