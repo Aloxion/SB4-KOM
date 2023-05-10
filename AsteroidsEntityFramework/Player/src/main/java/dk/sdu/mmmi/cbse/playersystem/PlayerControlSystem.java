@@ -7,7 +7,7 @@ import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
-import dk.sdu.mmmi.cbse.common.data.entityparts.ShootingPart;
+import dk.sdu.mmmi.cbse.common.data.entityparts.WeaponPart;
 import dk.sdu.mmmi.cbse.common.services.IBulletCreator;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.util.SPILocator;
@@ -21,7 +21,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
         for (Entity player : world.getEntities(Player.class)) {
             PositionPart positionPart = player.getPart(PositionPart.class);
             MovingPart movingPart = player.getPart(MovingPart.class);
-            ShootingPart shootingPart = player.getPart(ShootingPart.class);
+            WeaponPart weaponPart = player.getPart(WeaponPart.class);
             LifePart lifePart = player.getPart(LifePart.class);
 
             movingPart.setLeft(gameData.getKeys().isDown(GameKeys.LEFT));
@@ -30,15 +30,13 @@ public class PlayerControlSystem implements IEntityProcessingService {
 
             movingPart.process(gameData, player);
             positionPart.process(gameData, player);
-            shootingPart.process(gameData, player);
+            weaponPart.process(gameData, player);
             lifePart.process(gameData, player);
 
-            shootingPart.setShooting(gameData.getKeys().isDown(GameKeys.SPACE));
-            if (shootingPart.getShooting()) {
+            weaponPart.getWeaponState(gameData.getKeys().isDown(GameKeys.SPACE));
+            if (weaponPart.getWeapon()) {
                 Collection<IBulletCreator> bulletPlugins = SPILocator.locateAll(IBulletCreator.class);
-                System.out.println("test");
                 for (IBulletCreator bulletPlugin : bulletPlugins) {
-                    System.out.println("test");
                     world.addEntity(bulletPlugin.create(player, gameData));
                 }
             }

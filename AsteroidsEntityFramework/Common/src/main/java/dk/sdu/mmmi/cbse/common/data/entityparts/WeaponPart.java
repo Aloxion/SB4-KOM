@@ -13,7 +13,7 @@ public class WeaponPart implements  EntityPart {
         this.cooldownTime = cooldownTime;
     }
 
-    public void timePassed(boolean shooting) {
+    public void getWeaponState(boolean shooting) {
         if (!shooting) {
             this.shooting = false;
             return;
