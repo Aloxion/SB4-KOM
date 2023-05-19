@@ -1,9 +1,6 @@
 package dk.sdu.mmmi.cbse.asteroidsystem;
 
-import dk.sdu.mmmi.cbse.common.data.Color;
-import dk.sdu.mmmi.cbse.common.data.Entity;
-import dk.sdu.mmmi.cbse.common.data.GameData;
-import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.data.*;
 import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
@@ -50,12 +47,11 @@ public class AsteroidPlugin implements IGamePluginService {
 
         Entity asteroid = new Asteroid();
         this.setAsteroidRadius(asteroid);
-        this.buildAsteroid(gameData, asteroid, x, y, radians, startSpeed);
-
+        this.buildSmallerAsteroid(asteroid, x, y, radians, startSpeed);
         return asteroid;
     }
 
-    protected void createSplittetAsteroid(GameData gameData, World world, Entity asteroid) {
+    protected void createSplitAsteroid(World world, Entity asteroid) {
         world.removeEntity(asteroid);
 
         PositionPart positionPart = asteroid.getPart(PositionPart.class);
@@ -85,18 +81,18 @@ public class AsteroidPlugin implements IGamePluginService {
             float currentSpeed = movingPart.getSpeed();
             float startSpeed = (float) ((Math.random() * (75f - currentSpeed)) + currentSpeed);
 
-            this.buildAsteroid(gameData, splittetAsteroid, x, y, radians, startSpeed);
+            this.buildSmallerAsteroid(splittetAsteroid, x, y, radians, startSpeed);
 
             world.addEntity(splittetAsteroid);
         }
     }
 
-    private void buildAsteroid(GameData gameData, Entity asteroid, float x, float y, float radians, float startSpeed) {
-        int numPoints = 16; // Number of points to approximate the circle shape
+    private void buildSmallerAsteroid(Entity asteroid, float x, float y, float radians, float startSpeed) {
+        int numPoints = 32; // Number of points to approximate the circle shape
         float[] shapeX = new float[numPoints];
         float[] shapeY = new float[numPoints];
 
-        float radius = getAsteroidRadius();
+        float radius = new AsteroidSizes().getSize(this.life);
 
         for (int i = 0; i < numPoints; i++) {
             float angle = (float) (2 * Math.PI * i / numPoints);
@@ -112,25 +108,8 @@ public class AsteroidPlugin implements IGamePluginService {
         asteroid.add(new LifePart(this.life));
     }
 
-    private float getAsteroidRadius() {
-        switch (this.life) {
-            case 1:
-                radius = 10;
-                break;
-            case 2:
-                radius = 15;
-                break;
-            case 3:
-                radius = 25;
-                break;
-            default:
-                break;
-        }
-        return radius;
-    }
-
     private void setAsteroidRadius(Entity asteroid) {
-        float radius = getAsteroidRadius();
+        float radius = new AsteroidSizes().getSize(this.life);
         asteroid.setRadius(radius);
     }
 

@@ -1,6 +1,7 @@
 package dk.sdu.mmmi.cbse.asteroidsystem;
 
 
+import dk.sdu.mmmi.cbse.common.data.AsteroidSizes;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
@@ -9,7 +10,13 @@ import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class AsteroidControlSystem implements IEntityProcessingService {
+
+    private Map<Integer, Integer> sizes = new HashMap<>();
     @Override
     public void process(GameData gameData, World world) {
         for (Entity asteroid : world.getEntities(Asteroid.class)) {
@@ -17,7 +24,7 @@ public class AsteroidControlSystem implements IEntityProcessingService {
             MovingPart movingPart = asteroid.getPart(MovingPart.class);
             LifePart lifePart = asteroid.getPart(LifePart.class);
 
-            this.handleAsteroidSplitting(gameData, world, asteroid);
+            this.handleAsteroid(world, asteroid);
 
             movingPart.process(gameData, asteroid);
             positionPart.process(gameData, asteroid);
@@ -31,16 +38,15 @@ public class AsteroidControlSystem implements IEntityProcessingService {
         }
     }
 
-    private void handleAsteroidSplitting(GameData gameData, World world, Entity asteroid) {
+    private void handleAsteroid(World world, Entity asteroid) {
         LifePart lifePart = asteroid.getPart(LifePart.class);
 
-        // Do not continue if not hit or already dead
+        //Creates new asteroid if the asteroid has been hit, and it is not dead.
         if (!lifePart.isIsHit() || lifePart.isDead()) {
             return;
         }
-
         AsteroidPlugin asteroidPlugin = new AsteroidPlugin();
-        asteroidPlugin.createSplittetAsteroid(gameData, world, asteroid);
+        asteroidPlugin.createSplitAsteroid(world, asteroid);
     }
 
     private void updateShape(Entity entity) {
@@ -51,20 +57,9 @@ public class AsteroidControlSystem implements IEntityProcessingService {
 
         float x = positionPart.getX();
         float y = positionPart.getY();
-        float radius = 0;
 
-        switch (lifePart.getLife()) {
-            default:
-            case 1:
-                radius = 10;
-                break;
-            case 2:
-                radius = 15;
-                break;
-            case 3:
-                radius = 25;
-                break;
-        }
+        //Depending on the asteroid life, we choose the radius.
+        float radius = new AsteroidSizes().getSize(lifePart.getLife());
 
         // 32-sided polygon, to make a cleaner circle adjust this number.
         int numPoints = 32;

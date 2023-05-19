@@ -69,7 +69,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <executble>${java}</executble>
+                    <executable>${java}</executable>
                     <workingDirectory>.</workingDirectory>
                     <longModulepath>false</longModulepath>
                     <arguments>
