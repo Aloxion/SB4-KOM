@@ -34,6 +34,13 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.badlogicgames.gdx</groupId>
+            <artifactId>gdx</artifactId>
+            <version>1.11.0</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -62,7 +69,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <executable>${java}</executable>
+                    <executble>${java}</executble>
                     <workingDirectory>.</workingDirectory>
                     <longModulepath>false</longModulepath>
                     <arguments>

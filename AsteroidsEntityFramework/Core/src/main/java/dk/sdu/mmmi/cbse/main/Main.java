@@ -8,11 +8,9 @@ public class Main {
 	public static void main(String[] args) {
 
 		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(ModuleConfig.class);
-
 		for (String beanName : ctx.getBeanDefinitionNames()) {
 			System.out.println(beanName);
 		}
-
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setTitle("Asteroids");
 		config.setWindowSizeLimits(1000,600,1000,600);

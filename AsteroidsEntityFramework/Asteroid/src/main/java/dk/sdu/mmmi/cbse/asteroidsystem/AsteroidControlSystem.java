@@ -9,10 +9,6 @@ import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
-/**
- *
- * @author jcs
- */
 public class AsteroidControlSystem implements IEntityProcessingService {
     @Override
     public void process(GameData gameData, World world) {
@@ -35,18 +31,7 @@ public class AsteroidControlSystem implements IEntityProcessingService {
         }
     }
 
-    /**
-     * Handle asteroid splitting, by checking if it is needing, and doing if it is.
-     * <br>
-     * Pre-condition: Asteroid is present in the game board, and that the asteroid has life part. <br />
-     * post-condition: If the asteroid is not in splitting stage, nothing is done, else splittet asteroids are created.
-     *
-     * @param gameData Data for the game
-     * @param world World of the game
-     * @param asteroid The asteroid that needs to be checked and handled
-     */
     private void handleAsteroidSplitting(GameData gameData, World world, Entity asteroid) {
-        // Get parts
         LifePart lifePart = asteroid.getPart(LifePart.class);
 
         // Do not continue if not hit or already dead
@@ -54,49 +39,51 @@ public class AsteroidControlSystem implements IEntityProcessingService {
             return;
         }
 
-        // Create new asteroids through plugin
         AsteroidPlugin asteroidPlugin = new AsteroidPlugin();
         asteroidPlugin.createSplittetAsteroid(gameData, world, asteroid);
-
-        return;
     }
 
-    /**
-     * Update the shape of entity
-     * <br />
-     * Pre-condition: An entity that can be drawn, and a game tick has passed since last call for entity <br />
-     * Post-condition: Updated shape location for the entity
-     *
-     * @param entity Entity to update shape of
-     */
     private void updateShape(Entity entity) {
         float[] shapeX = entity.getShapeX();
         float[] shapeY = entity.getShapeY();
         PositionPart positionPart = entity.getPart(PositionPart.class);
+        LifePart lifePart = entity.getPart(LifePart.class);
 
         float x = positionPart.getX();
         float y = positionPart.getY();
-        float radians = positionPart.getRadians();
+        float radius = 0;
 
-        LifePart lifePart = entity.getPart(LifePart.class);
-
-        float[] distances = new float[8];
         switch (lifePart.getLife()) {
             default:
             case 1:
-                distances = new float[] {10, 8, 10, 6, 2, 10, 9, 10};
+                radius = 10;
                 break;
             case 2:
-                distances = new float[] {18, 5, 15, 10, 18, 18, 15, 18};
+                radius = 15;
                 break;
             case 3:
-                distances = new float[] {25, 20, 23, 21, 26, 18, 25, 25};
+                radius = 25;
                 break;
         }
 
-        for (int i = 0; i < 8; i++) {
-            shapeX[i] = (float) (x + Math.cos(radians + Math.PI * (i / 4f)) * distances[i]);
-            shapeY[i] = (float) (y + Math.sin(radians + Math.PI * (i / 4f)) * distances[i]);
+        // 32-sided polygon, to make a cleaner circle adjust this number.
+        int numPoints = 32;
+
+        // Ensure the shapeX and shapeY arrays have the correct length
+        if (shapeX.length != numPoints) {
+            shapeX = new float[numPoints];
+            entity.setShapeX(shapeX);
+        }
+
+        if (shapeY.length != numPoints) {
+            shapeY = new float[numPoints];
+            entity.setShapeY(shapeY);
+        }
+
+        for (int i = 0; i < numPoints; i++) {
+            float angle = (float) (i * (2 * Math.PI / numPoints));
+            shapeX[i] = x + (float) (Math.cos(angle) * radius);
+            shapeY[i] = y + (float) (Math.sin(angle) * radius);
         }
 
         entity.setShapeX(shapeX);

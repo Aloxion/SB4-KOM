@@ -14,6 +14,7 @@ public class AsteroidPlugin implements IGamePluginService {
     private Entity asteroid;
     private int life;
     private float deacceleration, acceleration, maxSpeed, rotationSpeed;
+    private float radius;
     private int shapePointCount;
     private Color color;
 
@@ -34,22 +35,12 @@ public class AsteroidPlugin implements IGamePluginService {
 
     @Override
     public void start(GameData gameData, World world) {
-        for (int i = 0; i < Math.floor(Math.random() * 2); i++) {
+        for (int i = 0; i < 5; i++) {
             asteroid = createInitialAsteroid(gameData);
             world.addEntity(asteroid);
         }
     }
 
-    /**
-     * Create initial asteroid
-     * <br />
-     * Pre-condition: New asteroid has to be created with default data. Game is running <br />
-     * Post-condition: Asteroid entity, that is set with initial default data.
-     *
-     * @param gameData Data for the
-     *
-     * @return Asteroid entity, to be added to the world
-     */
     public Entity createInitialAsteroid(GameData gameData) {
         float x = (float) (Math.random() * gameData.getDisplayWidth());
         float y = (float) (Math.random() * gameData.getDisplayHeight());
@@ -59,22 +50,11 @@ public class AsteroidPlugin implements IGamePluginService {
 
         Entity asteroid = new Asteroid();
         this.setAsteroidRadius(asteroid);
-
         this.buildAsteroid(gameData, asteroid, x, y, radians, startSpeed);
 
         return asteroid;
     }
 
-    /**
-     * Create splittet asteroid, that bases some data points on previous asteroids
-     * <br />
-     * Pre-condition: Asteroid that is started and has to be splittet, and game is running <br />
-     * Post-condition: Splittet asteroid added to the game world
-     *
-     * @param gameData Data for the game
-     * @param world World of the game
-     * @param asteroid Asteroid to be splittet
-     */
     protected void createSplittetAsteroid(GameData gameData, World world, Entity asteroid) {
         world.removeEntity(asteroid);
 
@@ -88,7 +68,7 @@ public class AsteroidPlugin implements IGamePluginService {
             return;
         }
 
-        float[] splits = new float[] {(float) ((Math.PI * 1/2)), (float) ((Math.PI * 1/2) * (-1))};
+        float[] splits = new float[]{(float) ((Math.PI * 1 / 2)), (float) ((Math.PI * 1 / 2) * (-1))};
 
         for (float split : splits) {
             Entity splittetAsteroid = new Asteroid();
@@ -111,40 +91,28 @@ public class AsteroidPlugin implements IGamePluginService {
         }
     }
 
-    /**
-     * Build parts for asteroid
-     * <br />
-     * Pre-condition: Asteroid that has not yet had parts added, or been build, and has to have parts added <br />
-     * Post-condition: Build asteroid with needed parts added
-     *
-     * @param gameData Data for the game
-     * @param asteroid World of the game
-     * @param x Start x position
-     * @param y Start y position
-     * @param radians Start radians
-     * @param startSpeed Start speed
-     */
     private void buildAsteroid(GameData gameData, Entity asteroid, float x, float y, float radians, float startSpeed) {
-        asteroid.setShapeX(new float[this.shapePointCount]);
-        asteroid.setShapeY(new float[this.shapePointCount]);
+        int numPoints = 16; // Number of points to approximate the circle shape
+        float[] shapeX = new float[numPoints];
+        float[] shapeY = new float[numPoints];
+
+        float radius = getAsteroidRadius();
+
+        for (int i = 0; i < numPoints; i++) {
+            float angle = (float) (2 * Math.PI * i / numPoints);
+            shapeX[i] = x + radius * (float) Math.cos(angle);
+            shapeY[i] = y + radius * (float) Math.sin(angle);
+        }
+
+        asteroid.setShapeX(shapeX);
+        asteroid.setShapeY(shapeY);
         asteroid.setColor(this.color);
         asteroid.add(new MovingPart(this.deacceleration, this.acceleration, this.maxSpeed, this.rotationSpeed, startSpeed));
         asteroid.add(new PositionPart(x, y, radians));
-        LifePart lifePart = new LifePart(this.life, 0);
-        asteroid.add(lifePart);
-        this.setAsteroidRadius(asteroid);
+        asteroid.add(new LifePart(this.life));
     }
 
-    /**
-     * Set radius of asteroid, based on its life
-     * <br />
-     * Pre-condition: Asteroid entity<br />
-     * Post-condition: Asteroid entity with correct radius
-     *
-     * @param asteroid Asteroid entity to have its radius updated
-     */
-    private void setAsteroidRadius(Entity asteroid) {
-        float radius = 0;
+    private float getAsteroidRadius() {
         switch (this.life) {
             case 1:
                 radius = 10;
@@ -158,8 +126,14 @@ public class AsteroidPlugin implements IGamePluginService {
             default:
                 break;
         }
+        return radius;
+    }
+
+    private void setAsteroidRadius(Entity asteroid) {
+        float radius = getAsteroidRadius();
         asteroid.setRadius(radius);
     }
+
 
     @Override
     public void stop(GameData gameData, World world) {

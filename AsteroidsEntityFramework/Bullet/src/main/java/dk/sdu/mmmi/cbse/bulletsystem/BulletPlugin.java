@@ -6,8 +6,12 @@ import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
+import dk.sdu.mmmi.cbse.common.data.entityparts.TimerPart;
 import dk.sdu.mmmi.cbse.common.services.IBulletCreator;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
+
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 
 public class BulletPlugin implements IGamePluginService, IBulletCreator {
@@ -21,35 +25,29 @@ public class BulletPlugin implements IGamePluginService, IBulletCreator {
 //        bullet = createBullet(gameData);
 //        world.addEntity(bullet);
     }
-    private Entity createBullet(Entity shooter) {
-        PositionPart shooterPosition = shooter.getPart(PositionPart.class);
-        MovingPart shooterMovement = shooter.getPart(MovingPart.class);
 
-        float deacceleration = 0;
-        float acceleration = 0;
-        float maxSpeed = 1000;
-        float rotationSpeed = 5;
-        float radians = shooterPosition.getRadians();
+    public Entity createBullet(Entity shooter) {
+        PositionPart shooterPos = shooter.getPart(PositionPart.class);
+
+        float x = shooterPos.getX();
+        float y = shooterPos.getY();
+        float radians = shooterPos.getRadians();
+        float speed = 350;
 
         Entity bullet = new Bullet();
+        bullet.setRadius(2);
+        bullet.setColor(new Color(45,200,0,1));
 
-        bullet.setRadius(1);
+        float bx = (float) cos(radians) * shooter.getRadius() * bullet.getRadius();
+        float by = (float) sin(radians) * shooter.getRadius() * bullet.getRadius();
 
-        float dx = (float) (Math.cos(radians) * shooter.getRadius());
-        float dy = (float) (Math.sin(radians) * shooter.getRadius());
+        bullet.add(new PositionPart(bx + x, by + y, radians));
+        bullet.add(new LifePart(1));
+        bullet.add(new MovingPart(0, 5000000, speed, 5, speed));
+        bullet.add(new TimerPart(1));
 
-        float bx = (float) Math.cos(radians) * shooter.getRadius() * bullet.getRadius();
-        float x = bx + shooterPosition.getX() + dx;
-        float by = (float) Math.sin(radians) * shooter.getRadius() * bullet.getRadius();
-        float y = by + shooterPosition.getY() + dy;
-        float shootSpeed = 350 + (shooterMovement.getSpeed());
-
-        bullet.setShapeX(new float[4]);
-        bullet.setShapeY(new float[4]);
-        bullet.setColor(new Color(1,1,1,1));
-        bullet.add(new MovingPart(deacceleration, acceleration, maxSpeed, rotationSpeed, shootSpeed));
-        bullet.add(new PositionPart(x, y, radians));
-        bullet.add(new LifePart(1, 1));
+        bullet.setShapeX(new float[2]);
+        bullet.setShapeY(new float[2]);
 
         return bullet;
     }
