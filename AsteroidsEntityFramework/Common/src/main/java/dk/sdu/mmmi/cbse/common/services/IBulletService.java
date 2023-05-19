@@ -5,5 +5,5 @@ import dk.sdu.mmmi.cbse.common.data.GameData;
 
 public interface IBulletService {
 
-    Entity create(Entity shooter, GameData gameData);
+    Entity create(Entity source, GameData gameData);
 }

@@ -18,8 +18,8 @@ public class BulletPlugin implements IBulletService {
 
     public BulletPlugin() {}
 
-    public Entity createBullet(Entity shooter) {
-        PositionPart shooterPos = shooter.getPart(PositionPart.class);
+    public Entity createBullet(Entity source) {
+        PositionPart shooterPos = source.getPart(PositionPart.class);
 
         float x = shooterPos.getX();
         float y = shooterPos.getY();
@@ -30,8 +30,8 @@ public class BulletPlugin implements IBulletService {
         bullet.setRadius(2);
         bullet.setColor(new Color(45,200,0,1));
 
-        float bx = (float) cos(radians) * shooter.getRadius() * bullet.getRadius();
-        float by = (float) sin(radians) * shooter.getRadius() * bullet.getRadius();
+        float bx = (float) cos(radians) * source.getRadius() * bullet.getRadius();
+        float by = (float) sin(radians) * source.getRadius() * bullet.getRadius();
 
         bullet.add(new PositionPart(bx + x, by + y, radians));
         bullet.add(new LifePart(1));
