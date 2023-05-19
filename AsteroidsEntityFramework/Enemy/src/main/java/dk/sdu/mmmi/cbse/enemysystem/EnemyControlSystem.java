@@ -3,10 +3,10 @@ package dk.sdu.mmmi.cbse.enemysystem;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.data.entityparts.CooldownPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
-import dk.sdu.mmmi.cbse.common.data.entityparts.WeaponPart;
-import dk.sdu.mmmi.cbse.common.services.IBulletCreator;
+import dk.sdu.mmmi.cbse.common.services.IBulletService;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
 import dk.sdu.mmmi.cbse.common.util.SPILocator;
@@ -25,16 +25,17 @@ public class EnemyControlSystem implements IEntityProcessingService {
         for (Entity enemy : world.getEntities(Enemy.class)) {
             PositionPart positionPart = enemy.getPart(PositionPart.class);
             MovingPart movingPart = enemy.getPart(MovingPart.class);
-            WeaponPart weaponPart = enemy.getPart(WeaponPart.class);
             LifePart lifePart = enemy.getPart(LifePart.class);
+            CooldownPart cooldownPart = enemy.getPart(CooldownPart.class);
 
+
+            //RANDOM MOVEMENT----------------------------------
             this.time = (this.time + gameData.getDelta()) % 100;
-
             float rotation = getRandomNumber(0.1f, 2.1f);
             float movement = getRandomNumber(0.1f, 2.1f);
-
             float sinValue = (float) Math.sin(time * rotation);
             float movementThreshold = movement * 0.5f;
+            //--------------------------------------------------
 
             movingPart.setLeft(sinValue < -movementThreshold);
             movingPart.setRight(sinValue > movementThreshold);
@@ -42,16 +43,12 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
             movingPart.process(gameData, enemy);
             positionPart.process(gameData, enemy);
-            weaponPart.process(gameData, enemy);
             lifePart.process(gameData, enemy);
+            cooldownPart.process(gameData, enemy);
 
-            weaponPart.getWeaponState(this.getRandomNumber(0f,1f) > 0.99f);
-            if (weaponPart.getWeapon()) {
-                Collection<IBulletCreator> bulletPlugins = SPILocator.locateAll(IBulletCreator.class);
 
-                for (IBulletCreator bulletPlugin : bulletPlugins) {
-                    world.addEntity(bulletPlugin.create(enemy, gameData));
-                }
+            if (this.getRandomNumber(0f,1f) > 0.99f && cooldownPart.notOnCooldown()) {
+                world.addEntity(SPILocator.locateAll(IBulletService.class).get(0).create(enemy,gameData));
             }
 
             if (lifePart.isDead()) {

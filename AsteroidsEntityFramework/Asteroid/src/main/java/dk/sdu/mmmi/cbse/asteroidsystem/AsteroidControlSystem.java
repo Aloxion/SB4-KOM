@@ -16,7 +16,6 @@ import java.util.Map;
 
 public class AsteroidControlSystem implements IEntityProcessingService {
 
-    private Map<Integer, Integer> sizes = new HashMap<>();
     @Override
     public void process(GameData gameData, World world) {
         for (Entity asteroid : world.getEntities(Asteroid.class)) {

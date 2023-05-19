@@ -4,25 +4,24 @@ import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.GameKeys;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.data.entityparts.CooldownPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.LifePart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
-import dk.sdu.mmmi.cbse.common.data.entityparts.WeaponPart;
-import dk.sdu.mmmi.cbse.common.services.IBulletCreator;
+import dk.sdu.mmmi.cbse.common.services.IBulletService;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.util.SPILocator;
 
 import java.util.Collection;
-
-
 public class PlayerControlSystem implements IEntityProcessingService {
     @Override
     public void process(GameData gameData, World world) {
+
         for (Entity player : world.getEntities(Player.class)) {
             PositionPart positionPart = player.getPart(PositionPart.class);
             MovingPart movingPart = player.getPart(MovingPart.class);
-            WeaponPart weaponPart = player.getPart(WeaponPart.class);
             LifePart lifePart = player.getPart(LifePart.class);
+            CooldownPart cooldownPart = player.getPart(CooldownPart.class);
 
             movingPart.setLeft(gameData.getKeys().isDown(GameKeys.LEFT));
             movingPart.setRight(gameData.getKeys().isDown(GameKeys.RIGHT));
@@ -30,15 +29,12 @@ public class PlayerControlSystem implements IEntityProcessingService {
 
             movingPart.process(gameData, player);
             positionPart.process(gameData, player);
-            weaponPart.process(gameData, player);
             lifePart.process(gameData, player);
+            cooldownPart.process(gameData, player);
 
-            weaponPart.getWeaponState(gameData.getKeys().isDown(GameKeys.SPACE));
-            if (weaponPart.getWeapon()) {
-                Collection<IBulletCreator> bulletPlugins = SPILocator.locateAll(IBulletCreator.class);
-                for (IBulletCreator bulletPlugin : bulletPlugins) {
-                    world.addEntity(bulletPlugin.create(player, gameData));
-                }
+
+            if (gameData.getKeys().isDown(GameKeys.SPACE) && cooldownPart.notOnCooldown()) {
+                world.addEntity(SPILocator.locateAll(IBulletService.class).get(0).create(player,gameData));
             }
 
             if (lifePart.isDead()) {

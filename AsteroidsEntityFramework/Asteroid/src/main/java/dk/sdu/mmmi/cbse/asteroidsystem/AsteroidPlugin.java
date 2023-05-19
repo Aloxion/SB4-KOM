@@ -11,8 +11,6 @@ public class AsteroidPlugin implements IGamePluginService {
     private Entity asteroid;
     private int life;
     private float deacceleration, acceleration, maxSpeed, rotationSpeed;
-    private float radius;
-    private int shapePointCount;
     private Color color;
 
     public AsteroidPlugin() {
@@ -27,7 +25,6 @@ public class AsteroidPlugin implements IGamePluginService {
         this.maxSpeed = 400;
         this.rotationSpeed = 0;
         this.color = new Color(1,1,1,1);
-        this.shapePointCount = 8;
     }
 
     @Override
@@ -64,14 +61,13 @@ public class AsteroidPlugin implements IGamePluginService {
             return;
         }
 
-        float[] splits = new float[]{(float) ((Math.PI * 1 / 2)), (float) ((Math.PI * 1 / 2) * (-1))};
+        //Split into two new asteroids, which has a radians opposite of each other
+        for (int i = 0; i <= 2; i++) {
+            Entity splitAsteroid = new Asteroid();
 
-        for (float split : splits) {
-            Entity splittetAsteroid = new Asteroid();
+            this.setAsteroidRadius(splitAsteroid);
 
-            this.setAsteroidRadius(splittetAsteroid);
-
-            float radians = positionPart.getRadians() + split;
+            float radians = positionPart.getRadians() + (float) ((Math.PI * 1 / 2) * ((i == 0 ? 1 : -1)));
 
             float bx = (float) Math.cos(radians) * asteroid.getRadius();
             float x = bx + positionPart.getX();
@@ -81,10 +77,11 @@ public class AsteroidPlugin implements IGamePluginService {
             float currentSpeed = movingPart.getSpeed();
             float startSpeed = (float) ((Math.random() * (75f - currentSpeed)) + currentSpeed);
 
-            this.buildSmallerAsteroid(splittetAsteroid, x, y, radians, startSpeed);
+            this.buildSmallerAsteroid(splitAsteroid, x, y, radians, startSpeed);
 
-            world.addEntity(splittetAsteroid);
+            world.addEntity(splitAsteroid);
         }
+
     }
 
     private void buildSmallerAsteroid(Entity asteroid, float x, float y, float radians, float startSpeed) {

@@ -17,6 +17,9 @@ public class CollisionDetector implements IPostEntityProcessingService {
                 }
 
                 LifePart hitterEntityLifePart = hitterEntity.getPart(LifePart.class);
+                if (hitterEntityLifePart.isDead()){
+                    world.removeEntity(hitterEntity);
+                }
 
                 if (hitterEntityLifePart.getLife() > 0 && this.collides(hitterEntity, collidedEntity)) {
                     hitterEntityLifePart.setIsHit(true);
