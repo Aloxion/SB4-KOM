@@ -10,8 +10,5 @@ module Common {
     exports dk.sdu.mmmi.cbse.common.util;
 
     uses IBulletService;
-    uses IGamePluginService;
-    uses IEntityProcessingService;
-    uses IPostEntityProcessingService;
-
 }
+

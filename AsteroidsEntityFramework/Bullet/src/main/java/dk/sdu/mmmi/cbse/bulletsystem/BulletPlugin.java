@@ -19,11 +19,11 @@ public class BulletPlugin implements IBulletService {
     public BulletPlugin() {}
 
     public Entity createBullet(Entity source) {
-        PositionPart shooterPos = source.getPart(PositionPart.class);
+        PositionPart pos = source.getPart(PositionPart.class);
 
-        float x = shooterPos.getX();
-        float y = shooterPos.getY();
-        float radians = shooterPos.getRadians();
+        float x = pos.getX();
+        float y = pos.getY();
+        float radians = pos.getRadians();
         float speed = 350;
 
         Entity bullet = new Bullet();
